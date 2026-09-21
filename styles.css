@@ -38,4 +38,7 @@ textarea { resize:vertical; }
 .lead-dialog form { padding:18px; overflow:auto; max-height:90vh; }.dialog-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 .form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }.form-grid label { display:grid; gap:6px; color:#425466; font-weight:700; font-size:13px; }.wide { grid-column:1/-1; }
 .form-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:18px; }
+.full-button { width:100%; margin-top:16px; }
+.success-note { color:#147a42; font-weight:700; }
+#recaptcha-container { min-height:1px; margin-top:8px; }
 @media (max-width:540px) { .app-shell { padding:16px 12px 28px; }.summary-grid { grid-template-columns:repeat(2,1fr); }.summary-card { min-height:68px; }.chart-grid { grid-template-columns:1fr; }.chart-card { min-height:235px; }.form-grid { grid-template-columns:1fr; }.app-header h1 { font-size:24px; } .toolbar { flex-direction:column; } }
