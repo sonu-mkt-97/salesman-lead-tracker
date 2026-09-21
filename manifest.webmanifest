@@ -1,0 +1,8 @@
+{
+  "name": "Salesman Lead Tracker",
+  "short_name": "Lead Tracker",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f8fb",
+  "theme_color": "#163b63"
+}
