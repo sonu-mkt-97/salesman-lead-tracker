@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -18,6 +18,10 @@ function isDone(lead) { return lead.status === "Done" || lead.status === "Conver
 function money(value) { return Number(value || 0).toLocaleString("en-IN", { style:"currency", currency:"INR", maximumFractionDigits:0 }); }
 function esc(value = "") { const e = document.createElement("div"); e.textContent = value; return e.innerHTML; }
 function setSync(text, error = false) { $("syncStatus").textContent = text; $("syncStatus").classList.toggle("error", error); }
+function salesmanEmail(value) {
+  const id = value.trim().toLowerCase();
+  return id.includes("@") ? id : `${id.replace(/[^a-z0-9._-]/g, "")}@leadtracker.local`;
+}
 function countBy(items, fn) { return items.reduce((out, item) => { const key = fn(item) || "Unassigned"; out[key] = (out[key] || 0) + 1; return out; }, {}); }
 function drawChart(id, type, labels, datasets) {
   if (!window.Chart) return;
@@ -87,7 +91,7 @@ form.addEventListener("submit", async (event) => {
 });
 $("deleteButton").addEventListener("click", async () => { const id = $("leadId").value; if (id && confirm("Delete this lead?")) { await deleteDoc(doc(db, "leads", id)); dialog.close(); } });
 $("exportButton").addEventListener("click", () => { const cols = ["leadDate","customerName","mobile","area","product","salesman","stage","lastFollowUp","nextFollowUp","status","salesAmount","remark"]; const csv = [cols.join(","), ...leads.map(x => cols.map(k => `"${String(x[k] || "").replaceAll('"','""')}"`).join(","))].join("\n"); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"})); a.download = `leads-${today()}.csv`; a.click(); URL.revokeObjectURL(a.href); });
-$("googleLoginButton").addEventListener("click", async () => { $("authError").textContent = ""; try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch { $("authError").textContent = "Google login could not start. The manager must enable it first."; } });
-$("authForm").addEventListener("submit", async (event) => { event.preventDefault(); $("authError").textContent = ""; try { await signInWithEmailAndPassword(auth, $("loginEmail").value.trim(), $("loginPassword").value); } catch { $("authError").textContent = "Login failed. Check your user ID and password."; } });
-$("registerButton").addEventListener("click", async () => { const email = $("loginEmail").value.trim(), password = $("loginPassword").value; if (!email || !password) { $("authError").textContent = "Enter your assigned email/user ID and a password first."; return; } try { const result = await createUserWithEmailAndPassword(auth, email, password); await updateProfile(result.user, { displayName: email.split("@")[0] }); } catch { $("authError").textContent = "Registration failed. This user ID may already exist."; } });
+$("googleLoginButton").addEventListener("click", async () => { $("authError").textContent = ""; try { await signInWithRedirect(auth, new GoogleAuthProvider()); } catch { $("authError").textContent = "Google login could not start. Please try again."; } });
+$("authForm").addEventListener("submit", async (event) => { event.preventDefault(); $("authError").textContent = ""; try { await signInWithEmailAndPassword(auth, salesmanEmail($("loginEmail").value), $("loginPassword").value); } catch (error) { $("authError").textContent = error.code === "auth/user-not-found" ? "This Salesman ID is not registered. Tap Create Salesman ID first." : "Login failed. Check your Salesman ID and password."; } });
+$("registerButton").addEventListener("click", async () => { const id = $("loginEmail").value.trim(), password = $("loginPassword").value; if (!id || !password) { $("authError").textContent = "Enter a Salesman ID and password first."; return; } if (password.length < 6) { $("authError").textContent = "Password must have at least 6 characters."; return; } try { const result = await createUserWithEmailAndPassword(auth, salesmanEmail(id), password); await updateProfile(result.user, { displayName: id }); } catch (error) { $("authError").textContent = error.code === "auth/email-already-in-use" ? "This Salesman ID already exists. Tap Login." : "Registration failed. Please try another Salesman ID."; } });
 $("addLeadButton").disabled = true; onAuthStateChanged(auth, handleUser); if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js"); render();

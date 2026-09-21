@@ -96,12 +96,12 @@
     <dialog id="authDialog" class="lead-dialog auth-dialog">
       <form id="authForm" method="dialog">
         <div class="dialog-header"><h2>Lead Tracker Login</h2></div>
-        <p class="auth-note">Manager: Sign in with Google. Salesman: use your assigned email and password.</p>
+        <p class="auth-note">Manager: Sign in with Google. Salesman: create a simple Salesman ID and password.</p>
         <button id="googleLoginButton" class="google-button" type="button">Continue with Google (Manager)</button>
         <p class="or">or Salesman Login</p>
-        <div class="form-grid"><label>Email / User ID<input id="loginEmail" type="email" autocomplete="username" required /></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required /></label></div>
+        <div class="form-grid"><label>Salesman ID<input id="loginEmail" type="text" autocomplete="username" placeholder="e.g. aman01" required /></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required /></label></div>
         <p id="authError" class="auth-error" role="alert"></p>
-        <div class="form-actions"><button id="registerButton" class="text-button" type="button">New salesman register</button><button class="primary-button" type="submit">Login</button></div>
+        <div class="form-actions"><button id="registerButton" class="text-button" type="button">Create Salesman ID</button><button class="primary-button" type="submit">Login</button></div>
       </form>
     </dialog>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
