@@ -20,6 +20,7 @@
       </header>
       <section id="accountBar" class="account-bar" hidden>
         <span id="accountName"></span><span id="syncStatus" class="sync-status">Connecting…</span>
+        <button id="addSalesmanButton" class="text-button" type="button" hidden>+ Salesman</button>
         <button id="signOutButton" class="text-button" type="button">Sign out</button>
       </section>
 
@@ -101,32 +102,24 @@
         <p class="or">or Salesman Login</p>
         <div class="form-grid"><label>Salesman ID<input id="loginEmail" type="text" autocomplete="username" placeholder="e.g. aman01" required /></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required /></label></div>
         <p id="authError" class="auth-error" role="alert"></p>
-        <div class="form-actions"><button id="registerButton" class="text-button" type="button">New salesman? Register</button><button class="primary-button" type="submit">Login</button></div>
+        <div class="form-actions"><span class="auth-note">Ask your manager for a Salesman ID.</span><button class="primary-button" type="submit">Login</button></div>
       </form>
     </dialog>
-    <dialog id="registerDialog" class="lead-dialog auth-dialog">
-      <form id="registerForm" method="dialog">
-        <div class="dialog-header"><h2>Create Salesman Account</h2><button id="closeRegister" class="icon-button" type="button" aria-label="Close">×</button></div>
-        <p class="auth-note">Step 1: verify the salesman’s mobile number. Step 2: create their login ID and password.</p>
+    <dialog id="salesmanDialog" class="lead-dialog auth-dialog">
+      <form id="salesmanForm" method="dialog">
+        <div class="dialog-header"><h2>Create Salesman Account</h2><button id="closeSalesman" class="icon-button" type="button" aria-label="Close">×</button></div>
+        <p class="auth-note">Manager-only account setup. Share the created Salesman ID and password privately with the salesman.</p>
         <div class="form-grid">
-          <label>Full Name<input id="registerName" type="text" autocomplete="name" placeholder="e.g. Aman Kumar" required /></label>
-          <label>Mobile Number<input id="registerMobile" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile number" required /></label>
+          <label>Full Name<input id="salesmanName" type="text" autocomplete="name" placeholder="e.g. Aman Kumar" required /></label>
+          <label>Mobile Number<input id="salesmanMobile" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile number" required /></label>
+          <label>Salesman ID<input id="salesmanId" type="text" autocomplete="username" placeholder="e.g. aman01" required /></label>
+          <label>Create Password<input id="salesmanPassword" type="password" autocomplete="new-password" placeholder="Minimum 6 characters" required /></label>
         </div>
-        <button id="sendOtpButton" class="primary-button full-button" type="button">Send OTP</button>
-        <div id="recaptcha-container"></div>
-        <div id="otpSection" hidden>
-          <div class="form-grid"><label>OTP<input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 digit OTP" /></label></div>
-          <button id="verifyOtpButton" class="primary-button full-button" type="button">Verify OTP</button>
-        </div>
-        <div id="accountSection" hidden>
-          <p class="auth-note success-note">Mobile verified. Now create the salesman login.</p>
-          <div class="form-grid"><label>Salesman ID<input id="registerId" type="text" autocomplete="username" placeholder="e.g. aman01" /></label><label>Create Password<input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimum 6 characters" /></label></div>
-          <button id="completeRegisterButton" class="primary-button full-button" type="button">Create Account</button>
-        </div>
-        <p id="registerError" class="auth-error" role="alert"></p>
+        <p id="salesmanError" class="auth-error" role="alert"></p>
+        <div class="form-actions"><button class="primary-button" type="submit">Create Salesman Account</button></div>
       </form>
     </dialog>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-    <script type="module" src="app.js?v=5"></script>
+    <script type="module" src="app.js?v=6"></script>
   </body>
 </html>
