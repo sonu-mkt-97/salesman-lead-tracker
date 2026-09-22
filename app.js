@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -92,7 +92,7 @@ form.addEventListener("submit", async (event) => {
 });
 $("deleteButton").addEventListener("click", async () => { const id = $("leadId").value; if (id && confirm("Delete this lead?")) { await deleteDoc(doc(db, "leads", id)); dialog.close(); } });
 $("exportButton").addEventListener("click", () => { const cols = ["leadDate","customerName","mobile","area","product","salesman","stage","lastFollowUp","nextFollowUp","status","salesAmount","remark"]; const csv = [cols.join(","), ...leads.map(x => cols.map(k => `"${String(x[k] || "").replaceAll('"','""')}"`).join(","))].join("\n"); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"})); a.download = `leads-${today()}.csv`; a.click(); URL.revokeObjectURL(a.href); });
-$("googleLoginButton").addEventListener("click", async () => { $("authError").textContent = ""; try { await signInWithRedirect(auth, new GoogleAuthProvider()); } catch { $("authError").textContent = "Google login could not start. Please try again."; } });
+$("googleLoginButton").addEventListener("click", async () => { $("authError").textContent = ""; const provider = new GoogleAuthProvider(); try { await signInWithPopup(auth, provider); } catch (error) { try { await signInWithRedirect(auth, provider); } catch { $("authError").textContent = "Google login could not start. Please try again."; } } });
 $("authForm").addEventListener("submit", async (event) => { event.preventDefault(); $("authError").textContent = ""; try { await signInWithEmailAndPassword(auth, salesmanEmail($("loginEmail").value), $("loginPassword").value); } catch (error) { $("authError").textContent = error.code === "auth/user-not-found" ? "This Salesman ID is not registered. Ask your manager to create it." : "Login failed. Check your Salesman ID and password."; } });
 $("addSalesmanButton").addEventListener("click", () => { $("salesmanForm").reset(); $("salesmanError").textContent = ""; salesmanDialog.showModal(); });
 $("closeSalesman").addEventListener("click", () => salesmanDialog.close());
